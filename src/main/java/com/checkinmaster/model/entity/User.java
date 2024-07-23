@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -15,33 +14,12 @@ import java.util.List;
 @AllArgsConstructor
 public class User extends BaseEntity {
 
-    @Column(name = "first_name", nullable = false)
-    private String firstName;
-
-    @Column(name = "middle_name")
-    private String middleName;
-
-    @Column(name = "last_name", nullable = false)
-    private String lastName;
-
-    @Column(name = "email", nullable = false, unique = true)
-    private String email;
-
     @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "phone", nullable = false, unique = true)
-    private String phone;
-
-    @Column(name = "registerDate")
-    private LocalDateTime registerDate;
-
-    @Column(name = "lastLoginDate")
+    @Column(name = "last_login_date")
     private LocalDateTime lastLoginDate;
 
     @Column(name = "is_active")
     private boolean isActive;
-
-    @OneToMany(mappedBy = "guest", cascade = CascadeType.ALL)
-    private List<Reservation> reservations;
 }

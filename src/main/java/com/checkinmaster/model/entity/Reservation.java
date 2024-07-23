@@ -26,13 +26,13 @@ public class Reservation extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User guest;
+    private Guest guest;
 
     @Column(name = "check_in_date", nullable = false)
     private LocalDate checkInDate;
 
     @Column(name = "check_out_date", nullable = false)
-    private LocalDate checkOut;
+    private LocalDate checkOutDate;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "payment_tyoe", nullable = false)

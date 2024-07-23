@@ -25,4 +25,8 @@ public class Payment extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "reservation", nullable = false)
     private Reservation reservation;
+
+    @ManyToOne
+    @JoinColumn(name = "guest", nullable = false)
+    private Guest guest;
 }

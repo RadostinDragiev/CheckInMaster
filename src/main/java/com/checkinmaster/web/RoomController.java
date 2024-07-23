@@ -19,7 +19,7 @@ public class RoomController {
     private final RoomService roomService;
 
     @PostMapping
-    public ResponseEntity<CreateRoomView> createRoom(@RequestBody CreateRoomDto createRoomDto,
+    public ResponseEntity<Void> createRoom(@RequestBody CreateRoomDto createRoomDto,
                                                      UriComponentsBuilder uriComponentsBuilder) {
         CreateRoomView room = this.roomService.createRoom(createRoomDto);
         return ResponseEntity.created(

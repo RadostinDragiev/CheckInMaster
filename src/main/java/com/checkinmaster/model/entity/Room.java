@@ -27,6 +27,9 @@ public class Room extends BaseEntity {
     @Column(name = "price_per_night", nullable = false)
     private BigDecimal pricePerNight;
 
+    @Column(name = "capacity", nullable = false)
+    private int capacity;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private RoomStatus status;

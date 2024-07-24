@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -22,7 +23,8 @@ public class Reservation extends BaseEntity {
             joinColumns = @JoinColumn(name = "reservation_id"),
             inverseJoinColumns = @JoinColumn(name = "room_id")
     )
-    private List<Room> rooms;
+    @Builder.Default
+    private List<Room> rooms = new ArrayList<>();
 
     @ManyToOne
     @JoinColumn(nullable = false)

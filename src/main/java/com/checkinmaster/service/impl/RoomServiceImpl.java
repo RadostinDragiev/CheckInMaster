@@ -6,6 +6,7 @@ import com.checkinmaster.model.entity.view.CreateRoomView;
 import com.checkinmaster.model.entity.view.DetailsRoomView;
 import com.checkinmaster.repository.RoomRepository;
 import com.checkinmaster.service.RoomService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
@@ -28,8 +29,13 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public DetailsRoomView getRoomById(UUID uuid) {
+    public DetailsRoomView getRoomViewById(UUID uuid) {
         return this.modelMapper.map(this.roomRepository.findById(uuid), DetailsRoomView.class);
+    }
+
+    @Override
+    public Room getRoomById(UUID uuid) {
+        return this.roomRepository.findById(uuid).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

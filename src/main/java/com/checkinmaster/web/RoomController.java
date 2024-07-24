@@ -31,7 +31,7 @@ public class RoomController {
 
     @GetMapping("/{roomUUID}")
     public ResponseEntity<DetailsRoomView> getRoomById(@PathVariable UUID roomUUID) {
-        DetailsRoomView roomById = this.roomService.getRoomById(roomUUID);
+        DetailsRoomView roomById = this.roomService.getRoomViewById(roomUUID);
         return ResponseEntity.ok(roomById);
     }
 

@@ -1,12 +1,12 @@
 package com.checkinmaster.service.impl;
 
-import com.checkinmaster.model.entity.Guest;
 import com.checkinmaster.model.entity.Reservation;
 import com.checkinmaster.model.entity.dto.CreateReservationDto;
 import com.checkinmaster.model.entity.view.DetailsReservationView;
 import com.checkinmaster.repository.ReservationRepository;
 import com.checkinmaster.service.GuestService;
 import com.checkinmaster.service.ReservationService;
+import com.checkinmaster.service.RoomService;
 import jakarta.persistence.EntityExistsException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +24,7 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ModelMapper modelMapper;
     private final GuestService guestService;
+    private final RoomService roomService;
 
     @Override
     @Transactional
@@ -36,8 +37,8 @@ public class ReservationServiceImpl implements ReservationService {
 
         Reservation reservation = this.modelMapper.map(createReservationDto, Reservation.class);
 
-        Guest guest = this.guestService.findGuest(createReservationDto.getGuest());
-        reservation.setGuest(guest);
+        reservation.setGuest(this.guestService.findGuest(createReservationDto.getGuest()));
+        reservation.getRooms().add(this.roomService.getRoomById(createReservationDto.getRoomUUID()));
 
         Reservation savedReservation = this.reservationRepository.saveAndFlush(reservation);
 

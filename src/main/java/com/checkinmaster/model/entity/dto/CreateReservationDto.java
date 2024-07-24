@@ -4,6 +4,7 @@ import com.checkinmaster.model.entity.enums.PaymentType;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Getter
 @Setter
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 public class CreateReservationDto {
 
     private int roomId;
+    private UUID roomUUID;
     private CreateGuestDto guest;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;

@@ -56,6 +56,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public List<Reservation> getRoomReservationForPeriod(LocalDate fromDate, LocalDate toDate, UUID roomUUID) {
-        return this.reservationRepository.getByAndCheckInDateBeforeAndCheckOutDateAfter(toDate, fromDate);
+        return this.reservationRepository.getByCheckInDateBeforeAndCheckOutDateAfter(toDate, fromDate);
     }
 }

@@ -10,5 +10,5 @@ import java.util.UUID;
 
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, UUID> {
-    List<Reservation> getByAndCheckInDateBeforeAndCheckOutDateAfter(LocalDate toDate, LocalDate fromDate);
+    List<Reservation> getByCheckInDateBeforeAndCheckOutDateAfter(LocalDate toDate, LocalDate fromDate);
 }

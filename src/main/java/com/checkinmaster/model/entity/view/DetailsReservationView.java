@@ -21,4 +21,5 @@ public class DetailsReservationView {
     private LocalDate checkOutDate;
     private PaymentType paymentType;
     private int guestsCount;
+    private List<ReservationPaymentView> payments;
 }

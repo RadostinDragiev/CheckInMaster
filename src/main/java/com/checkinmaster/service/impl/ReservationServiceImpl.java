@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,7 +30,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     @Transactional
     public DetailsReservationView createReservation(CreateReservationDto createReservationDto) {
-        // TODO: Check room availability
         List<Reservation> reservedRoom = getRoomReservationForPeriod(createReservationDto.getCheckInDate(), createReservationDto.getCheckOutDate(), createReservationDto.getRoomUUID());
         if (!reservedRoom.isEmpty()) {
             throw new EntityExistsException("Rooms is reserved!");
@@ -40,6 +40,11 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setGuest(this.guestService.findGuest(createReservationDto.getGuest()));
         reservation.getRooms().add(this.roomService.getRoomById(createReservationDto.getRoomUUID()));
 
+        reservation.getPayments().forEach(payment -> {
+            payment.setGuest(reservation.getGuest());
+            payment.setReservation(reservation);
+        });
+
         Reservation savedReservation = this.reservationRepository.saveAndFlush(reservation);
 
         return this.modelMapper.map(savedReservation, DetailsReservationView.class);
@@ -47,7 +52,8 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public DetailsReservationView getReservationById(UUID uuid) {
-        return this.modelMapper.map(this.reservationRepository.findById(uuid), DetailsReservationView.class);
+        Optional<Reservation> reservation = this.reservationRepository.findById(uuid);
+        return this.modelMapper.map(reservation, DetailsReservationView.class);
     }
 
     @Override

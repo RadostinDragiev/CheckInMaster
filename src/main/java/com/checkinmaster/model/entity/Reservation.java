@@ -47,5 +47,6 @@ public class Reservation extends BaseEntity {
     private String notes;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<Payment> payments;
+    @Builder.Default
+    private List<Payment> payments = new ArrayList<>();
 }

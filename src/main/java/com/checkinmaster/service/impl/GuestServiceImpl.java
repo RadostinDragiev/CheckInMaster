@@ -4,9 +4,12 @@ import com.checkinmaster.model.entity.Guest;
 import com.checkinmaster.model.entity.dto.CreateGuestDto;
 import com.checkinmaster.repository.GuestRepository;
 import com.checkinmaster.service.GuestService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -25,5 +28,10 @@ public class GuestServiceImpl implements GuestService {
     public Guest findGuest(CreateGuestDto createGuestDto) {
         return this.guestRepository.findByEmail(createGuestDto.getEmail())
                 .orElseGet(() -> registerGuest(createGuestDto));
+    }
+
+    @Override
+    public Guest findGuestById(UUID id) {
+        return this.guestRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 }

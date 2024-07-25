@@ -31,7 +31,7 @@ public class ReservationController {
 
     @GetMapping("/{reservationUUID}")
     public ResponseEntity<DetailsReservationView> getReservation(@PathVariable UUID reservationUUID) {
-        return ResponseEntity.ok(this.reservationService.getReservationById(reservationUUID));
+        return ResponseEntity.ok(this.reservationService.getReservationViewById(reservationUUID));
     }
 
     @DeleteMapping("/{reservationUUID}")

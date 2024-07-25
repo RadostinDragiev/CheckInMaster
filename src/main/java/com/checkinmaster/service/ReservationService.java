@@ -12,7 +12,9 @@ public interface ReservationService {
 
     DetailsReservationView createReservation(CreateReservationDto createReservationDto);
 
-    DetailsReservationView getReservationById(UUID uuid);
+    DetailsReservationView getReservationViewById(UUID uuid);
+
+    Reservation getReservationById(UUID uuid);
 
     void deleteReservation(UUID uuid);
 

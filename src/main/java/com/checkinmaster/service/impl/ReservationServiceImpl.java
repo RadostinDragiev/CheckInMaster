@@ -8,6 +8,7 @@ import com.checkinmaster.service.GuestService;
 import com.checkinmaster.service.ReservationService;
 import com.checkinmaster.service.RoomService;
 import jakarta.persistence.EntityExistsException;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -51,9 +52,14 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public DetailsReservationView getReservationById(UUID uuid) {
+    public DetailsReservationView getReservationViewById(UUID uuid) {
         Optional<Reservation> reservation = this.reservationRepository.findById(uuid);
         return this.modelMapper.map(reservation, DetailsReservationView.class);
+    }
+
+    @Override
+    public Reservation getReservationById(UUID uuid) {
+        return this.reservationRepository.findById(uuid).orElseThrow(EntityNotFoundException::new);
     }
 
     @Override

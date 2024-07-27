@@ -18,6 +18,8 @@ public interface RoomService {
 
     Room getRoomById(UUID uuid);
 
+    List<CreateRoomView> getAll();
+
     List<ReservationRoomView> findAllAvailableRooms(FindRoomDto findRoomDto);
 
     void deleteRoomById(UUID uuid);

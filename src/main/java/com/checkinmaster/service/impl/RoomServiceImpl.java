@@ -51,6 +51,11 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    public List<CreateRoomView> getAll() {
+        return Arrays.asList(this.modelMapper.map(this.roomRepository.findAll(), CreateRoomView[].class));
+    }
+
+    @Override
     public void deleteRoomById(UUID uuid) {
         this.roomRepository.deleteById(uuid);
     }

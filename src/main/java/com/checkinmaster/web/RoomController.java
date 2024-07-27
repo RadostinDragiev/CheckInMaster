@@ -17,6 +17,7 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/rooms")
 @RequiredArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class RoomController {
 
     private final RoomService roomService;
@@ -41,6 +42,11 @@ public class RoomController {
     public ResponseEntity<DetailsRoomView> getRoomById(@PathVariable UUID roomUUID) {
         DetailsRoomView roomById = this.roomService.getRoomViewById(roomUUID);
         return ResponseEntity.ok(roomById);
+    }
+
+    @GetMapping("/getAll")
+    private ResponseEntity<List<CreateRoomView>> getAllRoom() {
+        return ResponseEntity.ok(this.roomService.getAll());
     }
 
     @DeleteMapping("/{roomUUID}")

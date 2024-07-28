@@ -15,6 +15,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.*;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -52,7 +53,8 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<CreateRoomView> getAll() {
-        return Arrays.asList(this.modelMapper.map(this.roomRepository.findAll(), CreateRoomView[].class));
+        List<Room> rooms = this.roomRepository.findAll(Sort.by("uuid").descending());
+        return Arrays.asList(this.modelMapper.map(rooms, CreateRoomView[].class));
     }
 
     @Override

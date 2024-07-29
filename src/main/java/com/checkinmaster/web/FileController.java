@@ -24,8 +24,8 @@ public class FileController {
     }
 
     @DeleteMapping
-    public ResponseEntity<Void> deleteImage(@RequestParam("assetId") String assetId) throws Exception {
-        this.cloudinaryService.deleteFile(List.of(assetId));
+    public ResponseEntity<Void> deleteImage(@RequestParam("publicIds") String publicIds) throws Exception {
+        this.cloudinaryService.deleteFile(List.of(publicIds));
         return ResponseEntity.ok().build();
     }
 }

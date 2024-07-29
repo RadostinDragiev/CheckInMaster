@@ -3,7 +3,6 @@ package com.checkinmaster.util.impl;
 import com.checkinmaster.util.CloudinaryService;
 import com.cloudinary.Api;
 import com.cloudinary.Cloudinary;
-import com.cloudinary.Uploader;
 import com.cloudinary.api.ApiResponse;
 import com.cloudinary.utils.ObjectUtils;
 import lombok.RequiredArgsConstructor;
@@ -12,32 +11,57 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.*;
-import java.util.ArrayList;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class CloudinaryServiceImpl implements CloudinaryService {
 
+    private static final String LOCAL_STORAGE_PATH = "src/main/resources/temp/";
+
     private final Cloudinary cloudinary;
 
     @Override
-    public void uploadFile(List<MultipartFile> file, int roomNumber) throws IOException {
-        Uploader uploader = this.cloudinary.uploader();
-        Map<String, Object> map = new HashMap<>();
-        int roomId = 2;
-        map.put("folder", "check-in-master/room" + roomId);
-        map.put("public_id", roomId + "-" + "picture");
+    public void uploadFile(List<MultipartFile> multipartFiles, int roomNumber) {
 
-        List<File> convFiles = convertToFile(file);
-        Map upload = uploader.upload(convFiles, map);
-        log.info("File uploaded with public_id" + upload.get("public_id"));
-        log.info("File uploaded with asset_id" + upload.get("asset_id"));
-        System.out.println();
+        int filesCount = 1;
+        for (MultipartFile file : multipartFiles) {
+            if (multipartFiles.isEmpty()) {
+                log.info("------ Failed to upload " + file.getOriginalFilename() + "because it was empty.");
+                continue;
+            }
+
+            try {
+                byte[] bytes = file.getBytes();
+                Path path = Paths.get(LOCAL_STORAGE_PATH + file.getOriginalFilename());
+                Files.write(path, bytes);
+
+                File uploadedFile = path.toFile();
+                Map<String, Object> map = new HashMap<>();
+                map.put("folder", "check-in-master/room-" + roomNumber);
+                map.put("public_id", "picture-" + filesCount++);
+                Map uploadResult = cloudinary.uploader().upload(uploadedFile, map);
+
+                log.info("----- Successfully uploaded " + file.getOriginalFilename()
+                        + " with Cloudinary asset_id: " + uploadResult.get("asset_id")
+                        + " and with Cloudinary public_id: " + uploadResult.get("public_id"));
+
+                if (uploadedFile.delete()) {
+                    log.info("----- File " + file.getOriginalFilename() + " deleted successfully. ");
+                } else {
+                    log.error("----- Failed to delete file " + file.getOriginalFilename());
+                }
+            } catch (IOException e) {
+                log.error("----- Failed to upload " + file.getOriginalFilename() + " due to an error. ");
+                log.error(e.getMessage());
+            }
+        }
     }
 
     @Override
@@ -48,27 +72,11 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public void deleteFile(List<String> assetId) throws Exception {
-        Api api = this.cloudinary.api();
-        ApiResponse invalidate = api.deleteResources(assetId, ObjectUtils.asMap("invalidate", true));
+    public void deleteFile(List<String> publicIds) throws Exception {
+        ApiResponse invalidate = this.cloudinary.api().
+                deleteResources(publicIds, ObjectUtils.asMap("invalidate", true));
+
         Map<String, String> map = (Map<String, String>) invalidate.get("deleted");
         map.forEach((key, value) -> log.warn(String.format("For public id: %s response is %s", key, value)));
-    }
-
-    public List<File> convertToFile(List<MultipartFile> files) {
-        return files.stream()
-                .map(mf -> {
-                    File file = new File(mf.getOriginalFilename());
-                    try (OutputStream os = new FileOutputStream(file)) {
-                        os.write(mf.getBytes());
-                    } catch (FileNotFoundException e) {
-                        throw new RuntimeException(e);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-
-                    return file;
-                })
-                .toList();
     }
 }

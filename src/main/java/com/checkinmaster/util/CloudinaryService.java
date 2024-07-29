@@ -11,5 +11,5 @@ public interface CloudinaryService {
 
     void fetchFile(List<String> assetIds) throws Exception;
 
-    void deleteFile(List<String> assetId) throws Exception;
+    void deleteFile(List<String> publicIds) throws Exception;
 }

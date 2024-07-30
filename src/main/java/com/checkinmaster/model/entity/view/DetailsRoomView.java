@@ -1,6 +1,5 @@
 package com.checkinmaster.model.entity.view;
 
-import com.checkinmaster.model.entity.Reservation;
 import com.checkinmaster.model.entity.enums.RoomStatus;
 import com.checkinmaster.model.entity.enums.RoomType;
 import lombok.*;
@@ -22,5 +21,6 @@ public class DetailsRoomView {
     private BigDecimal pricePerNight;
     private int capacity;
     private RoomStatus status;
-    private List<Reservation> reservations;
+    private List<RoomReservationView> reservations;
+    private List<DetailsImageView> images;
 }

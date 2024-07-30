@@ -1,5 +1,6 @@
 package com.checkinmaster.util.impl;
 
+import com.checkinmaster.service.ImageService;
 import com.checkinmaster.util.CloudinaryService;
 import com.cloudinary.Api;
 import com.cloudinary.Cloudinary;
@@ -14,9 +15,11 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -24,8 +27,11 @@ import java.util.Map;
 public class CloudinaryServiceImpl implements CloudinaryService {
 
     private static final String LOCAL_STORAGE_PATH = "src/main/resources/temp/";
+    private static final String CLOUDINARY_FOLDER_PREFIX = "check-in-master/room-";
+    private static final String CLOUDINARY_IMAGE_PREFIX = "picture-";
 
     private final Cloudinary cloudinary;
+    private final ImageService imageService;
 
     @Override
     public void uploadFile(List<MultipartFile> multipartFiles, int roomNumber) {
@@ -44,9 +50,12 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
                 File uploadedFile = path.toFile();
                 Map<String, Object> map = new HashMap<>();
-                map.put("folder", "check-in-master/room-" + roomNumber);
-                map.put("public_id", "picture-" + filesCount++);
-                Map uploadResult = cloudinary.uploader().upload(uploadedFile, map);
+                map.put("folder", CLOUDINARY_FOLDER_PREFIX + roomNumber);
+                map.put("public_id", CLOUDINARY_IMAGE_PREFIX + filesCount++);
+                Map<String, String> uploadResult = cloudinary.uploader().upload(uploadedFile, map);
+
+                this.imageService.saveImage(uploadResult.get("asset_id"), uploadResult.get("public_id"),
+                        uploadResult.get("secure_url"), LocalDateTime.now(), UUID.fromString("df955941-01ec-40b8-b9b4-8cc0545ecb47"));
 
                 log.info("----- Successfully uploaded " + file.getOriginalFilename()
                         + " with Cloudinary asset_id: " + uploadResult.get("asset_id")

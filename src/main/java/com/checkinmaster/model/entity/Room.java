@@ -36,4 +36,7 @@ public class Room extends BaseEntity {
 
     @ManyToMany(mappedBy = "rooms", cascade = CascadeType.ALL)
     private List<Reservation> reservations;
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<Image> images;
 }

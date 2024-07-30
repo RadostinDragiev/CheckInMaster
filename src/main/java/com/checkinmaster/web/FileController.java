@@ -19,7 +19,7 @@ public class FileController {
     @PostMapping
     public ResponseEntity<Void> uploadImage(@RequestParam("file") List<MultipartFile> file,
                                             @RequestParam("roomNumber") int roomNumber) throws IOException {
-        this.cloudinaryService.uploadFile(file, roomNumber);
+        this.cloudinaryService.uploadFile(file, null);
         return ResponseEntity.ok().build();
     }
 

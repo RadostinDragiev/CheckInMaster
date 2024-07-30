@@ -10,14 +10,18 @@ import com.checkinmaster.model.entity.view.DetailsRoomView;
 import com.checkinmaster.model.entity.view.ReservationRoomView;
 import com.checkinmaster.repository.RoomRepository;
 import com.checkinmaster.service.RoomService;
+import com.checkinmaster.util.CloudinaryService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.persistence.criteria.*;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,11 +36,17 @@ public class RoomServiceImpl implements RoomService {
     private final RoomRepository roomRepository;
     private final ModelMapper modelMapper;
     private final EntityManager entityManager;
+    private final CloudinaryService cloudinaryService;
 
     @Override
-    public CreateRoomView createRoom(CreateRoomDto createRoomDto) {
+    @Transactional
+    public CreateRoomView createRoom(CreateRoomDto createRoomDto, List<MultipartFile> multipartFiles) throws IOException {
         Room room = this.modelMapper.map(createRoomDto, Room.class);
         Room newlyCreatedRoom = this.roomRepository.saveAndFlush(room);
+
+        if (!multipartFiles.isEmpty()) {
+            this.cloudinaryService.uploadFile(multipartFiles, newlyCreatedRoom);
+        }
 
         return this.modelMapper.map(newlyCreatedRoom, CreateRoomView.class);
     }

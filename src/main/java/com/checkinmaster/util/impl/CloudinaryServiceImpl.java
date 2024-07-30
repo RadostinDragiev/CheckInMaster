@@ -1,5 +1,6 @@
 package com.checkinmaster.util.impl;
 
+import com.checkinmaster.model.entity.Room;
 import com.checkinmaster.service.ImageService;
 import com.checkinmaster.util.CloudinaryService;
 import com.cloudinary.Api;
@@ -19,7 +20,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 @Slf4j
 @Service
@@ -34,7 +34,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     private final ImageService imageService;
 
     @Override
-    public void uploadFile(List<MultipartFile> multipartFiles, int roomNumber) {
+    public void uploadFile(List<MultipartFile> multipartFiles, Room room) {
 
         int filesCount = 1;
         for (MultipartFile file : multipartFiles) {
@@ -50,12 +50,12 @@ public class CloudinaryServiceImpl implements CloudinaryService {
 
                 File uploadedFile = path.toFile();
                 Map<String, Object> map = new HashMap<>();
-                map.put("folder", CLOUDINARY_FOLDER_PREFIX + roomNumber);
+                map.put("folder", CLOUDINARY_FOLDER_PREFIX + room.getNumber());
                 map.put("public_id", CLOUDINARY_IMAGE_PREFIX + filesCount++);
                 Map<String, String> uploadResult = cloudinary.uploader().upload(uploadedFile, map);
 
                 this.imageService.saveImage(uploadResult.get("asset_id"), uploadResult.get("public_id"),
-                        uploadResult.get("secure_url"), LocalDateTime.now(), UUID.fromString("df955941-01ec-40b8-b9b4-8cc0545ecb47"));
+                        uploadResult.get("secure_url"), LocalDateTime.now(), room);
 
                 log.info("----- Successfully uploaded " + file.getOriginalFilename()
                         + " with Cloudinary asset_id: " + uploadResult.get("asset_id")

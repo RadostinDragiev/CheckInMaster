@@ -17,15 +17,14 @@ public class FileController {
     private final CloudinaryService cloudinaryService;
 
     @PostMapping
-    public ResponseEntity<Void> uploadImage(@RequestParam("file") List<MultipartFile> file,
-                                            @RequestParam("roomNumber") int roomNumber) throws IOException {
-        this.cloudinaryService.uploadFile(file, null);
+    public ResponseEntity<Void> uploadImage(@RequestParam("file") List<MultipartFile> file) throws IOException {
+        this.cloudinaryService.uploadFiles(file, null);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteImage(@RequestParam("publicIds") String publicIds) throws Exception {
-        this.cloudinaryService.deleteFile(List.of(publicIds));
+        this.cloudinaryService.deleteFiles(List.of(publicIds));
         return ResponseEntity.ok().build();
     }
 }

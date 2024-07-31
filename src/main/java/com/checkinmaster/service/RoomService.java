@@ -24,5 +24,5 @@ public interface RoomService {
 
     List<ReservationRoomView> findAllAvailableRooms(FindRoomDto findRoomDto);
 
-    void deleteRoomById(UUID uuid);
+    void deleteRoomById(UUID uuid) throws Exception;
 }

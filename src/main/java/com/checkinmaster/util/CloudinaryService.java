@@ -8,9 +8,9 @@ import java.util.List;
 
 public interface CloudinaryService {
 
-    void uploadFile(List<MultipartFile> file, Room room) throws IOException;
+    void uploadFiles(List<MultipartFile> file, Room room) throws IOException;
 
-    void fetchFile(List<String> assetIds) throws Exception;
+    void fetchFiles(List<String> assetIds) throws Exception;
 
-    void deleteFile(List<String> publicIds) throws Exception;
+    void deleteFiles(List<String> publicIds) throws Exception;
 }

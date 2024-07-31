@@ -9,6 +9,7 @@ import com.checkinmaster.model.entity.view.CreateRoomView;
 import com.checkinmaster.model.entity.view.DetailsRoomView;
 import com.checkinmaster.model.entity.view.ReservationRoomView;
 import com.checkinmaster.repository.RoomRepository;
+import com.checkinmaster.service.ImageService;
 import com.checkinmaster.service.RoomService;
 import com.checkinmaster.util.CloudinaryService;
 import jakarta.persistence.EntityManager;
@@ -37,6 +38,7 @@ public class RoomServiceImpl implements RoomService {
     private final ModelMapper modelMapper;
     private final EntityManager entityManager;
     private final CloudinaryService cloudinaryService;
+    private final ImageService imageService;
 
     @Override
     @Transactional
@@ -45,7 +47,7 @@ public class RoomServiceImpl implements RoomService {
         Room newlyCreatedRoom = this.roomRepository.saveAndFlush(room);
 
         if (!multipartFiles.isEmpty()) {
-            this.cloudinaryService.uploadFile(multipartFiles, newlyCreatedRoom);
+            this.cloudinaryService.uploadFiles(multipartFiles, newlyCreatedRoom);
         }
 
         return this.modelMapper.map(newlyCreatedRoom, CreateRoomView.class);
@@ -68,7 +70,9 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
-    public void deleteRoomById(UUID uuid) {
+    @Transactional
+    public void deleteRoomById(UUID uuid) throws Exception {
+        this.cloudinaryService.deleteFiles(imageService.getImagePublicIds(uuid));
         this.roomRepository.deleteById(uuid);
     }
 

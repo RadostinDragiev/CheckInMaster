@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -26,5 +28,13 @@ public class ImageServiceImpl implements ImageService {
                 .room(room).build();
 
         this.imageRepository.saveAndFlush(image);
+    }
+
+    @Override
+    public List<String> getImagePublicIds(UUID roomUUID) {
+        return this.imageRepository.findAllByRoom_Uuid(roomUUID)
+                .stream()
+                .map(Image::getPublicId)
+                .toList();
     }
 }

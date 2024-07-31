@@ -34,7 +34,7 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     private final ImageService imageService;
 
     @Override
-    public void uploadFile(List<MultipartFile> multipartFiles, Room room) {
+    public void uploadFiles(List<MultipartFile> multipartFiles, Room room) {
 
         int filesCount = 1;
         for (MultipartFile file : multipartFiles) {
@@ -74,16 +74,16 @@ public class CloudinaryServiceImpl implements CloudinaryService {
     }
 
     @Override
-    public void fetchFile(List<String> assetIds) throws Exception {
+    public void fetchFiles(List<String> assetIds) throws Exception {
         Api api = this.cloudinary.api();
 
         ApiResponse file = api.resourcesByAssetIDs(assetIds, ObjectUtils.emptyMap());
     }
 
     @Override
-    public void deleteFile(List<String> publicIds) throws Exception {
-        ApiResponse invalidate = this.cloudinary.api().
-                deleteResources(publicIds, ObjectUtils.asMap("invalidate", true));
+    public void deleteFiles(List<String> publicIds) throws Exception {
+        ApiResponse invalidate = this.cloudinary.api()
+                        .deleteResources(publicIds, ObjectUtils.asMap("invalidate", true));
 
         Map<String, String> map = (Map<String, String>) invalidate.get("deleted");
         map.forEach((key, value) -> log.warn(String.format("For public id: %s response is %s", key, value)));

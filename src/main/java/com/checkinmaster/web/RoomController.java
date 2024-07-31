@@ -54,7 +54,7 @@ public class RoomController {
     }
 
     @DeleteMapping("/{roomUUID}")
-    public ResponseEntity<Void> deleteRoomById(@PathVariable UUID roomUUID) {
+    public ResponseEntity<Void> deleteRoomById(@PathVariable UUID roomUUID) throws Exception {
         this.roomService.deleteRoomById(roomUUID);
         return ResponseEntity.ok().build();
     }

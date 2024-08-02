@@ -65,7 +65,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public List<CreateRoomView> getAll() {
-        List<Room> rooms = this.roomRepository.findAll(Sort.by("uuid").descending());
+        List<Room> rooms = this.roomRepository.findAll(Sort.by("number"));
         return Arrays.asList(this.modelMapper.map(rooms, CreateRoomView[].class));
     }
 

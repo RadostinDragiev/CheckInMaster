@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @Setter
 @NoArgsConstructor
@@ -31,6 +29,6 @@ public abstract class BaseUser extends BaseEntity {
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
-    @Column(name = "register_date")
-    private LocalDateTime registerDate;
+    @Column(name = "is_deleted", columnDefinition = "BOOLEAN DEFAULT false")
+    private boolean isDeleted;
 }

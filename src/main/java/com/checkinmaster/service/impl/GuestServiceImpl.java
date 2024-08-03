@@ -26,7 +26,7 @@ public class GuestServiceImpl implements GuestService {
 
     @Override
     public Guest findGuest(CreateGuestDto createGuestDto) {
-        return this.guestRepository.findByEmail(createGuestDto.getEmail())
+        return this.guestRepository.findByEmailAndIsDeletedIsFalse(createGuestDto.getEmail())
                 .orElseGet(() -> registerGuest(createGuestDto));
     }
 

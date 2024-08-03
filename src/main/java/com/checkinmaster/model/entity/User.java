@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class User extends BaseEntity {
+public class User extends BaseUser {
 
     @Column(name = "password", nullable = false)
     private String password;
